@@ -1,81 +1,49 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(Rigidbody))]
 public class MainPlayerController : MonoBehaviour {
-    public float basicMoveForce = 100.0f;
-    public float dashLaunchForce = 1000.0f;
-    public LineRenderer arrowLineRenderer;
+    public float basicMoveForce = 10.0f;
 
     private Rigidbody rb;
 
     private Camera mainCam;
     private Transform cameraTransform;
 
-    private Vector3 mouseAimDir = Vector3.zero;
+    private Vector3 initialPos;
+
+    private const float yPosResetCutoff = -5.0f;
+
+    private bool sceneIsLoading = false;
+
     void Start() {
         rb = GetComponent<Rigidbody>();
+
+        initialPos = transform.position;
 
         mainCam = Camera.main;
         cameraTransform = mainCam.transform;
     }
 
 	private void Update() {
-        GetMouseAim();
+		if (transform.position.y < yPosResetCutoff) {
+            transform.position = initialPos;
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+		}
 
-        if (Input.GetMouseButtonDown(0)) {
-            SetArrowRendererPositions();
-        }
-        if (Input.GetMouseButton(0)) {
-            SetArrowRendererPositions();
-        }
-        if (Input.GetMouseButtonUp(0)) {
-            arrowLineRenderer.enabled = false;
-            rb.AddForce(mouseAimDir * dashLaunchForce, ForceMode.Impulse);
-        }
-    }
+        if (!sceneIsLoading && Input.GetKeyDown(KeyCode.Escape)) {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            sceneIsLoading = true;
+		}
+	}
 
 	void FixedUpdate() {
         Vector3 targetDirection = GetTargetDirection();
 
         rb.AddForce(targetDirection * basicMoveForce);
-    }
-
-    private void SetArrowRendererPositions() {
-        if (mouseAimDir.magnitude <= 0.0f) {
-            arrowLineRenderer.enabled = false;
-            return;
-		}
-        arrowLineRenderer.enabled = true;
-
-        Vector3[] rendererPositions = new Vector3[] {
-            transform.position,
-            transform.position + (mouseAimDir * 5.0f)
-        };
-
-        arrowLineRenderer.positionCount = 2;
-        arrowLineRenderer.SetPositions(rendererPositions);
-    }
-
-    private void GetMouseAim() {
-        Ray mouseRay = mainCam.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-        if (Physics.Raycast(mouseRay, out hit)) {
-            Debug.DrawRay(mouseRay.origin, mouseRay.direction * hit.distance, Color.green);
-
-            if (Vector3.Distance(hit.point, transform.position) <= 1.0f) {
-                mouseAimDir = Vector3.zero;
-            }
-            else {
-                Vector3 aimHitPoint = new Vector3(hit.point.x, transform.position.y, hit.point.z);
-                mouseAimDir = (aimHitPoint - transform.position).normalized;
-            }
-        }
-        else {
-            Debug.DrawRay(mouseRay.origin, mouseRay.direction * 1000.0f, Color.red);
-        }
-
     }
 
     private Vector3 GetTargetDirection() {
