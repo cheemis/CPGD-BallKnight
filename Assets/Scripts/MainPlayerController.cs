@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(Rigidbody))]
 public class MainPlayerController : MonoBehaviour {
@@ -16,7 +17,6 @@ public class MainPlayerController : MonoBehaviour {
     private Vector3 mouseAimDir = Vector3.zero;
     void Start() {
         rb = GetComponent<Rigidbody>();
-
         mainCam = Camera.main;
         cameraTransform = mainCam.transform;
     }
@@ -90,5 +90,19 @@ public class MainPlayerController : MonoBehaviour {
         camRight = camRight.normalized;
 
         return (input.y * camForward + input.x * camRight).normalized;
+    }
+    void Die(){
+        StartCoroutine(LoadLevel(SceneManager.GetActiveScene().buildIndex));
+        GetComponent<MeshRenderer>().enabled = false;
+        GetComponent<Rigidbody>().isKinematic = true;
+    }
+    IEnumerator LoadLevel(int level){
+        //put fancy animations and stuff here
+        yield return new WaitForSeconds(1f);
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(level);
+        while (!asyncLoad.isDone){
+            yield return null;
+        }
+        //Next scene is done loading
     }
 }
