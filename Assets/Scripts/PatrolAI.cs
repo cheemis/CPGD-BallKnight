@@ -22,9 +22,10 @@ public class PatrolAI : MonoBehaviour
     private Vector3 current_dest;
     private Color current_color;
     private short mode;
-    private const short WANDER_MODE = 0;
-    private const short ATTACK_MODE = 1;
-    private const short FOLLOW_MODE = 2;
+
+    public const short WANDER_MODE = 0;
+    public const short ATTACK_MODE = 1;
+    public const short FOLLOW_MODE = 2;
 
     void Start()
     {
@@ -49,32 +50,33 @@ public class PatrolAI : MonoBehaviour
         switch (mode)
         {
             case ATTACK_MODE:
+                moving_enemy.attack(player_loc.position);
                 if ((transform.position - player_loc.position).magnitude > attack_radius)
                 {
                     current_color = Color.black;
-                    mode = FOLLOW_MODE;
+                    switchPatrolMode(FOLLOW_MODE);
                 }
                 break;
             case FOLLOW_MODE:
                 float dist_to_player = Vector3.Distance(transform.position, player_loc.position);
+                moving_enemy.follow(player_loc.position);
                 if (dist_to_player < attack_radius)
                 {
-                    mode = ATTACK_MODE;
+                    switchPatrolMode(ATTACK_MODE);
                     current_color = Color.white;
                     break;
                 }
                 else if (dist_to_player > sight_radius)
                 {
-                    mode = WANDER_MODE;
+                    switchPatrolMode(WANDER_MODE);
                     current_color = path_color;
                     break;
                 }
-                moving_enemy.follow(player_loc.position);
                 break;
             default:
                 if (Vector3.Distance(transform.position, player_loc.position) < sight_radius)
                 {
-                    mode = FOLLOW_MODE;
+                    switchPatrolMode(FOLLOW_MODE);
                     current_color = Color.black;
                 }
                 else if ((current_dest - transform.position).magnitude < patrol_radius)
@@ -88,5 +90,11 @@ public class PatrolAI : MonoBehaviour
                 }
                 break;
         }
+    }
+
+    void switchPatrolMode(short new_mode)
+    {
+        moving_enemy.switchPatrolMode(mode, new_mode);
+        mode = new_mode;
     }
 }
