@@ -52,7 +52,7 @@ public class RollingEnemy : MonoBehaviour, Enemy
             pointer.GetComponent<Renderer>().material.SetFloat("Power_proportion", power_scale);
             if (launch_power >= attack_power)
             {
-                rb.AddForce(Vector3.Normalize(player_position - rb.position) * attack_power);
+                rb.AddForce(Vector3.Normalize(player_position - rb.position) * attack_power, ForceMode.Impulse);
                 charging = false;
                 attack_timer = attack_cooldown;
                 launched = true;
