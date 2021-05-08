@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.09841844, g: 0.16645457, b: 0.3000598, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -480,6 +480,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   basicMoveForce: 200
+  initialJumpLaunchForce: 75
+  additionalHoldJumpForce: 400
+  maxAdditionalHoldJumpTime: 0.2
+  groundCheckDist: 0.2
+  groundLayerMask:
+    serializedVersion: 2
+    m_Bits: 64
+  groundSphereCastRadiusRatio: 0.55
 --- !u!114 &217229440
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -585,7 +593,7 @@ GameObject:
   - component: {fileID: 469507274}
   - component: {fileID: 469507273}
   - component: {fileID: 469507272}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -680,7 +688,7 @@ GameObject:
   - component: {fileID: 730154121}
   - component: {fileID: 730154120}
   - component: {fileID: 730154119}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Stage
   m_TagString: Untagged
   m_Icon: {fileID: 0}

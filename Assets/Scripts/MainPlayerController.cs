@@ -4,22 +4,35 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(SphereCollider))]
 public class MainPlayerController : MonoBehaviour {
     public float basicMoveForce = 10.0f;
+    public float initialJumpLaunchForce = 100.0f;
+    public float additionalHoldJumpForce = 200.0f;
+    public float maxAdditionalHoldJumpTime = 1.0f;
+    public float groundCheckDist = 1.0f;
+    public LayerMask groundLayerMask;
+    [Range(0.0f, 1.0f)]
+    public float groundSphereCastRadiusRatio;
 
     private Rigidbody rb;
+    private SphereCollider sphereColl;
 
     private Camera mainCam;
     private Transform cameraTransform;
 
     private Vector3 initialPos;
 
-    private const float yPosResetCutoff = -5.0f;
+    private bool isJumping = false;
+    private bool isGrounded = false;
+    private bool waitingForFallToGroundCheck = false;
+    private float jumpActiveTimer = 0.0f;
 
     private bool sceneIsLoading = false;
-
+    private const float yPosResetCutoff = -5.0f;
     void Start() {
         rb = GetComponent<Rigidbody>();
+        sphereColl = GetComponent<SphereCollider>();
 
         initialPos = transform.position;
 
@@ -28,7 +41,31 @@ public class MainPlayerController : MonoBehaviour {
     }
 
 	private void Update() {
-		if (transform.position.y < yPosResetCutoff) {
+        if (!waitingForFallToGroundCheck) {
+            CheckForGround();
+        }
+        else {
+            if (rb.velocity.y < 0.0f) {
+                waitingForFallToGroundCheck = false;
+                isJumping = false;
+            }
+		}
+
+        if (isGrounded) {
+            if (Input.GetButtonDown("Jump")) {
+                rb.AddForce(Vector3.up * initialJumpLaunchForce, ForceMode.Impulse);
+                waitingForFallToGroundCheck = true;
+                isGrounded = false;
+
+                jumpActiveTimer = 0.0f;
+                isJumping = true;
+            }
+        }
+        if (Input.GetButtonUp("Jump")) {
+            isJumping = false;
+        }
+
+        if (transform.position.y < yPosResetCutoff) {
             transform.position = initialPos;
             rb.velocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
@@ -44,6 +81,16 @@ public class MainPlayerController : MonoBehaviour {
         Vector3 targetDirection = GetTargetDirection();
 
         rb.AddForce(targetDirection * basicMoveForce);
+
+        if (isJumping && !isGrounded) {
+            if (jumpActiveTimer < maxAdditionalHoldJumpTime) {
+                rb.AddForce(Vector3.up * additionalHoldJumpForce);
+                jumpActiveTimer += Time.fixedDeltaTime;
+            }
+            else {
+                isJumping = false;
+            }
+        }
     }
 
     private Vector3 GetTargetDirection() {
@@ -59,4 +106,26 @@ public class MainPlayerController : MonoBehaviour {
 
         return (input.y * camForward + input.x * camRight).normalized;
     }
+
+    private void CheckForGround() {
+        float groundSphereCastRadius = sphereColl.bounds.extents.y * groundSphereCastRadiusRatio;
+        float groundSphereCastMaxDist = sphereColl.bounds.extents.y + groundCheckDist;
+
+        RaycastHit hit;
+        isGrounded = Physics.SphereCast(transform.position, groundSphereCastRadius, Vector3.down,
+            out hit, groundSphereCastMaxDist, groundLayerMask);
+
+        if (isGrounded) {
+            Debug.DrawRay(transform.position + Vector3.right * groundSphereCastRadius, Vector3.down * groundSphereCastMaxDist, Color.green);
+            Debug.DrawRay(transform.position + Vector3.left * groundSphereCastRadius, Vector3.down * groundSphereCastMaxDist, Color.green);
+            Debug.DrawRay(transform.position + Vector3.forward * groundSphereCastRadius, Vector3.down * groundSphereCastMaxDist, Color.green);
+            Debug.DrawRay(transform.position + Vector3.back * groundSphereCastRadius, Vector3.down * groundSphereCastMaxDist, Color.green);
+        }
+        else {
+            Debug.DrawRay(transform.position + Vector3.right * groundSphereCastRadius, Vector3.down * groundSphereCastMaxDist, Color.red);
+            Debug.DrawRay(transform.position + Vector3.left * groundSphereCastRadius, Vector3.down * groundSphereCastMaxDist, Color.red);
+            Debug.DrawRay(transform.position + Vector3.forward * groundSphereCastRadius, Vector3.down * groundSphereCastMaxDist, Color.red);
+            Debug.DrawRay(transform.position + Vector3.back * groundSphereCastRadius, Vector3.down * groundSphereCastMaxDist, Color.red);
+        }
+	}
 }
