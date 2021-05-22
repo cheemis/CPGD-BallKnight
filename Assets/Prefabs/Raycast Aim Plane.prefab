@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6490885432329590856}
   - component: {fileID: 6490885432329590859}
   - component: {fileID: 6490885432329590858}
-  m_Layer: 6
+  m_Layer: 9
   m_Name: Raycast Aim Plane
   m_TagString: Untagged
   m_Icon: {fileID: 0}

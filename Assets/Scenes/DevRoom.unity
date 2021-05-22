@@ -140,7 +140,7 @@ GameObject:
   - component: {fileID: 469507274}
   - component: {fileID: 469507273}
   - component: {fileID: 469507272}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -235,7 +235,7 @@ GameObject:
   - component: {fileID: 730154121}
   - component: {fileID: 730154120}
   - component: {fileID: 730154119}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: Stage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -318,11 +318,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!120 &1160412928 stripped
-LineRenderer:
-  m_CorrespondingSourceObject: {fileID: 6756288378180177028, guid: 8769279bc381da44aadebd9c6fbeac62, type: 3}
-  m_PrefabInstance: {fileID: 6756288377025065860}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1549817756
 GameObject:
   m_ObjectHideFlags: 0
@@ -480,7 +475,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2367017822221383599
 PrefabInstance:
@@ -541,6 +536,22 @@ PrefabInstance:
       propertyPath: m_Follow
       value: 
       objectReference: {fileID: 217229437}
+    - target: {fileID: 2367017823494203582, guid: 9eacabda240462f49ad7e41ea32afec3, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 26.851828
+      objectReference: {fileID: 0}
+    - target: {fileID: 2367017823494203582, guid: 9eacabda240462f49ad7e41ea32afec3, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -36.99418
+      objectReference: {fileID: 0}
+    - target: {fileID: 2367017823987098978, guid: 9eacabda240462f49ad7e41ea32afec3, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 26.851828
+      objectReference: {fileID: 0}
+    - target: {fileID: 2367017823987098978, guid: 9eacabda240462f49ad7e41ea32afec3, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -36.99418
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9eacabda240462f49ad7e41ea32afec3, type: 3}
 --- !u!1001 &4470966686032962007
@@ -550,10 +561,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 4470966686231234903, guid: 03350b073d32895408a38b46687d9222, type: 3}
-      propertyPath: arrowLineRenderer
-      value: 
-      objectReference: {fileID: 1160412928}
     - target: {fileID: 4470966686231234986, guid: 03350b073d32895408a38b46687d9222, type: 3}
       propertyPath: m_RootOrder
       value: 3
@@ -564,7 +571,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4470966686231234986, guid: 03350b073d32895408a38b46687d9222, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.43
+      value: 0.519
       objectReference: {fileID: 0}
     - target: {fileID: 4470966686231234986, guid: 03350b073d32895408a38b46687d9222, type: 3}
       propertyPath: m_LocalPosition.z

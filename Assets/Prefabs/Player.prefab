@@ -56,7 +56,7 @@ MonoBehaviour:
   groundCheckDist: 0.2
   groundLayerMask:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 256
   groundSphereCastRadiusRatio: 0.55
 --- !u!114 &4470966686231234903
 MonoBehaviour:
@@ -75,7 +75,7 @@ MonoBehaviour:
   launchArrowGrowRate: 2
   aimPlaneLayerMask:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 256
 --- !u!33 &4470966686231234987
 MeshFilter:
   m_ObjectHideFlags: 0
