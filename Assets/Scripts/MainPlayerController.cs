@@ -32,6 +32,7 @@ public class MainPlayerController : MonoBehaviour {
     private const float yPosResetCutoff = -5.0f;
     void Start() {
         rb = GetComponent<Rigidbody>();
+        
         sphereColl = GetComponent<SphereCollider>();
 
         initialPos = transform.position;
@@ -106,6 +107,20 @@ public class MainPlayerController : MonoBehaviour {
 
         return (input.y * camForward + input.x * camRight).normalized;
     }
+    void Die(){
+        StartCoroutine(LoadLevel(SceneManager.GetActiveScene().buildIndex));
+        GetComponent<MeshRenderer>().enabled = false;
+        GetComponent<Rigidbody>().isKinematic = true;
+    }
+    IEnumerator LoadLevel(int level){
+        //put fancy animations and stuff here
+        yield return new WaitForSeconds(1f);
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(level);
+        while (!asyncLoad.isDone){
+            yield return null;
+        }
+        //Next scene is done loading
+    }
 
     private void CheckForGround() {
         float groundSphereCastRadius = sphereColl.bounds.extents.y * groundSphereCastRadiusRatio;
@@ -128,4 +143,5 @@ public class MainPlayerController : MonoBehaviour {
             Debug.DrawRay(transform.position + Vector3.back * groundSphereCastRadius, Vector3.down * groundSphereCastMaxDist, Color.red);
         }
 	}
+
 }
