@@ -50,7 +50,7 @@ public class PatrolAI : MonoBehaviour
         switch (mode)
         {
             case ATTACK_MODE:
-                moving_enemy.attack(player_loc.position);
+                moving_enemy.Attack(player_loc.position);
                 if ((transform.position - player_loc.position).magnitude > attack_radius)
                 {
                     current_color = Color.black;
@@ -59,7 +59,7 @@ public class PatrolAI : MonoBehaviour
                 break;
             case FOLLOW_MODE:
                 float dist_to_player = Vector3.Distance(transform.position, player_loc.position);
-                moving_enemy.follow(player_loc.position);
+                moving_enemy.Follow(player_loc.position);
                 if (dist_to_player < attack_radius)
                 {
                     switchPatrolMode(ATTACK_MODE);
@@ -86,7 +86,7 @@ public class PatrolAI : MonoBehaviour
                 }
                 else if (Mathf.Abs(rb.velocity.magnitude) < min_speed)
                 {
-                    moving_enemy.wander(current_dest);
+                    moving_enemy.Wander(current_dest);
                 }
                 break;
         }
@@ -94,7 +94,7 @@ public class PatrolAI : MonoBehaviour
 
     void switchPatrolMode(short new_mode)
     {
-        moving_enemy.switchPatrolMode(mode, new_mode);
+        moving_enemy.SwitchPatrolMode(mode, new_mode);
         mode = new_mode;
     }
 }

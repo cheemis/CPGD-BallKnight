@@ -30,9 +30,12 @@ public class MainPlayerController : MonoBehaviour {
 
     private bool sceneIsLoading = false;
     private const float yPosResetCutoff = -5.0f;
+
+    private Vector3 lastFrameVel;
     void Start() {
         rb = GetComponent<Rigidbody>();
-        
+        lastFrameVel = rb.velocity;
+
         sphereColl = GetComponent<SphereCollider>();
 
         initialPos = transform.position;
@@ -144,4 +147,17 @@ public class MainPlayerController : MonoBehaviour {
         }
 	}
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        Enemy enemy_component = collision.gameObject.GetComponent<Enemy>();
+        if (enemy_component != null)
+        {
+            float vel_difference = enemy_component.OnCollision(transform.position, lastFrameVel);
+        }
+    }
+
+    public void LateUpdate()
+    {
+        lastFrameVel = rb.velocity;
+    }
 }
