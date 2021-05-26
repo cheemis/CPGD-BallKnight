@@ -26,6 +26,9 @@ public class RollingEnemy : MonoBehaviour, Enemy
     private bool launched = false;
     private GameObject pointer;
     private Vector3 arrow_scale;
+    [SerializeField]
+    private int health = 20;
+    private float HIT_THRESHOLD = 10f;
 
     public void Start()
     {
@@ -114,5 +117,23 @@ public class RollingEnemy : MonoBehaviour, Enemy
         //    GameObject.Destroy(pointer);
         //    charging = false;
         //}
+    }
+
+    public float OnCollision(Vector3 other_position, Vector3 other_velocity)
+    {
+        Vector3 center_to_center = transform.position - other_position;
+        Vector3 projected_enemy_vel =  Vector3.Project(rb.velocity, center_to_center),
+            projected_other_vel = Vector3.Project(other_velocity, center_to_center);
+        float vel_difference = projected_enemy_vel.magnitude - projected_other_vel.magnitude;
+        if (vel_difference < HIT_THRESHOLD)
+        {
+            health -= 1;
+            return vel_difference;
+        }
+        else if (vel_difference > HIT_THRESHOLD)
+        {
+            return vel_difference;
+        }
+        return -1.0f;
     }
 }
