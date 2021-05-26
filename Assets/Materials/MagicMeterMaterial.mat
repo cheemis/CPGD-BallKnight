@@ -96,7 +96,7 @@ Material:
     - _ClearCoatSmoothness: 0
     - _Cull: 2
     - _Cutoff: 0.5
-    - _CutoffPos: 0.519
+    - _CutoffPos: 0.7
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
@@ -114,8 +114,8 @@ Material:
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _Surface: 0
-    - _WaveAmplitude: 0.2
-    - _WavePeriod: 30
+    - _WaveAmplitude: 0.25
+    - _WavePeriod: 10
     - _WaveSpeedMult: -2
     - _WorkflowMode: 1
     - _ZWrite: 1
@@ -123,7 +123,7 @@ Material:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _FillColor: {r: 0, g: 0.9284022, b: 1, a: 0.1960784}
-    - _NonfillColor: {r: 0, g: 0.6677432, b: 1, a: 0.007843138}
+    - _FillColor: {r: 0.27058825, g: 0.90588236, b: 0.09803922, a: 0.5882353}
+    - _NonfillColor: {r: 0.30980393, g: 1, b: 0, a: 0.007843138}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
   m_BuildTextureStacks: []

@@ -10,6 +10,8 @@ public class ArrowLaunchHandler : MonoBehaviour {
 
     private Rigidbody rb;
 
+    private ChargeMetersHandler chargeMetersHandler;
+
     private Camera mainCam;
 
     private Vector3 mouseAimDir = Vector3.forward;
@@ -19,6 +21,8 @@ public class ArrowLaunchHandler : MonoBehaviour {
 
     private const int arrowRendererPointCount = 100;
     void Start() {
+        chargeMetersHandler = FindObjectOfType<ChargeMetersHandler>();
+
         rb = GetComponent<Rigidbody>();
 
         mainCam = Camera.main;
@@ -27,31 +31,42 @@ public class ArrowLaunchHandler : MonoBehaviour {
     private void Update() {
         GetMouseAim();
 
-        if (Input.GetMouseButtonDown(0)) {
-            launchArrowActive = true;
-            currentLaunchArrowRatio = 0.1f;
-
-            SetArrowRendererPositions();
-        }
-        if (launchArrowActive) {
-            if (Input.GetMouseButton(0)) {
-                currentLaunchArrowRatio += Time.deltaTime * launchArrowGrowRate;
-                currentLaunchArrowRatio = Mathf.Clamp(currentLaunchArrowRatio, 0.0f, 1.0f);
+        if (chargeMetersHandler.CheckIfMinimumMagicValueReached()) {
+            if (Input.GetMouseButtonDown(0)) {
+                launchArrowActive = true;
+                currentLaunchArrowRatio = 0.1f;
 
                 SetArrowRendererPositions();
             }
-            if (Input.GetMouseButtonUp(0)) {
-                arrowLineRenderer.enabled = false;
-                rb.AddForce(mouseAimDir * maxDashLaunchForce * currentLaunchArrowRatio, ForceMode.Impulse);
+            if (launchArrowActive) {
+                if (Input.GetMouseButton(0)) {
+                    currentLaunchArrowRatio += Time.deltaTime * launchArrowGrowRate;
+                    currentLaunchArrowRatio = Mathf.Clamp(currentLaunchArrowRatio, 0.0f, 1.0f);
 
-                currentLaunchArrowRatio = 0.0f;
-            }
+                    SetArrowRendererPositions();
+                }
+                if (Input.GetMouseButtonUp(0)) {
+                    arrowLineRenderer.enabled = false;
+                    Vector3 forceVector = mouseAimDir * maxDashLaunchForce
+                        * currentLaunchArrowRatio * chargeMetersHandler.GetAdjustedMagicMeterValue();
+                    rb.AddForce(forceVector, ForceMode.Impulse);
 
-            if (Input.GetMouseButtonDown(1)) {
-                arrowLineRenderer.enabled = false;
-                currentLaunchArrowRatio = 0.0f;
-                launchArrowActive = false;
+                    chargeMetersHandler.DrainMagicMeter();
+
+                    currentLaunchArrowRatio = 0.0f;
+                }
+
+                if (Input.GetMouseButtonDown(1)) {
+                    arrowLineRenderer.enabled = false;
+                    currentLaunchArrowRatio = 0.0f;
+                    launchArrowActive = false;
+                }
             }
+        }
+        else if (launchArrowActive) {
+            arrowLineRenderer.enabled = false;
+            currentLaunchArrowRatio = 0.0f;
+            launchArrowActive = false;
         }
     }
 
