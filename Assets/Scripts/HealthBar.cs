@@ -14,6 +14,6 @@ public class HealthBar : MonoBehaviour
     void Update()
     {
         transform.position = objectToFollow.position + offset;
-        transform.LookAt(2 * transform.position - camera.position);
+        transform.eulerAngles = camera.eulerAngles;
     }
 }
