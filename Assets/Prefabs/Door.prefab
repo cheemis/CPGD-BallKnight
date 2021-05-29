@@ -224,7 +224,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timeToLoadNext: 1
-  belowGround: -1
+  belowGround: 1
   slowRoll: 10
   yPop: 7
   rotForce: 20

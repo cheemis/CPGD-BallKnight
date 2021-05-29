@@ -11,7 +11,7 @@ public class Door : MonoBehaviour
 
     public float timeToLoadNext = 1f;
 
-    public float belowGround = -3f;
+    public float belowGround = 3f;
 
     //Entering Door Variables
     public float slowRoll = 10f;
@@ -22,6 +22,7 @@ public class Door : MonoBehaviour
     void Start()
     {
         anim = GetComponent<Animator>();
+        belowGround = transform.position.y - belowGround;
     }
 
     public void OpenDoor()
@@ -46,7 +47,10 @@ public class Door : MonoBehaviour
     {
         Rigidbody rb = player.GetComponent<Rigidbody>();
         Vector3 towardsHole = (transform.position - player.transform.position);
-        Vector3 direction = towardsHole / 1.5f;
+        Vector3 direction = towardsHole / 2f;
+
+        //disable player
+        player.GetComponent<MainPlayerController>().DisableInput();
 
         while (rb.velocity.magnitude > .1f)
         {
