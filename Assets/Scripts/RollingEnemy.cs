@@ -26,6 +26,13 @@ public class RollingEnemy : MonoBehaviour, Enemy
     private bool launched = false;
     private GameObject pointer;
     private Vector3 arrow_scale;
+    [SerializeField]
+    private int maxHealth = 20;
+    private int health;
+    private float HIT_THRESHOLD = 10f;
+    private Vector3 lastFrameVel;
+    [SerializeField]
+    private MeshRenderer healthBarRenderer;
 
     public void Start()
     {
@@ -34,9 +41,11 @@ public class RollingEnemy : MonoBehaviour, Enemy
         attack_timer = 0;
         pointer = Instantiate(arrow_prefab, transform.position, Quaternion.identity);
         arrow_scale = pointer.transform.localScale;
+        lastFrameVel = rb.velocity;
+        health = maxHealth;
         GameObject.Destroy(pointer);
     }
-    public void attack(Vector3 player_position)
+    public void Attack(Vector3 player_position)
     {
         if (charging)
         {
@@ -82,7 +91,7 @@ public class RollingEnemy : MonoBehaviour, Enemy
 
     }
 
-    public void follow(Vector3 player_position)
+    public void Follow(Vector3 player_position)
     {
         if (Mathf.Abs(rb.velocity.magnitude) < max_follow_speed)
         {
@@ -91,7 +100,7 @@ public class RollingEnemy : MonoBehaviour, Enemy
         attack_timer = Mathf.Max(attack_timer - Time.deltaTime, -1.0f);
     }
 
-    public void wander(Vector3 current_dest)
+    public void Wander(Vector3 current_dest)
     {
         if (Mathf.Abs(rb.velocity.magnitude) < min_wander_speed)
         {
@@ -102,17 +111,38 @@ public class RollingEnemy : MonoBehaviour, Enemy
         attack_timer = Mathf.Max(attack_timer - Time.deltaTime, -1.0f);
     }
 
-    public void switchPatrolMode(short old_mode, short new_mode)
+    public void SwitchPatrolMode(short old_mode, short new_mode)
     {
         if (old_mode == PatrolAI.ATTACK_MODE && charging)
         {
             GameObject.Destroy(pointer);
             charging = false;
         }
-        //if (pointer)
-        //{
-        //    GameObject.Destroy(pointer);
-        //    charging = false;
-        //}
+    }
+
+    public float OnCollision(Vector3 other_position, Vector3 other_velocity)
+    {
+        Vector3 center_to_center = transform.position - other_position;
+        Vector3 projected_enemy_vel =  Vector3.Project(lastFrameVel, center_to_center),
+            projected_other_vel = Vector3.Project(other_velocity, center_to_center);
+        float vel_difference = projected_enemy_vel.magnitude - projected_other_vel.magnitude;
+        Debug.Log($"{projected_other_vel.magnitude} {projected_enemy_vel.magnitude} vel_difference: {vel_difference}");
+        if (vel_difference < HIT_THRESHOLD)
+        {
+            health -= 1;
+            return vel_difference;
+        }
+        else if (vel_difference > HIT_THRESHOLD)
+        {
+            return vel_difference;
+        }
+        return -1.0f;
+    }
+
+    public void LateUpdate()
+    {
+        lastFrameVel = rb.velocity;
+        healthBarRenderer.material.SetFloat("PercentHealth", 0/(float)maxHealth);
+        healthBarRenderer.material.SetFloat("PercentHealth", Mathf.Abs(Mathf.Sin(Time.time)));
     }
 }
