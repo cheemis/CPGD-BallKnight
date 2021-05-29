@@ -225,6 +225,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timeToLoadNext: 1
   belowGround: -1
+  slowRoll: 10
+  yPop: 7
+  rotForce: 20
 --- !u!95 &7811550448335189155
 Animator:
   serializedVersion: 3
@@ -255,7 +258,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 2, z: 1}
+  m_Size: {x: 5, y: 2, z: 5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &7811550449101780366
 GameObject:
