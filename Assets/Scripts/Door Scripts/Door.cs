@@ -16,6 +16,7 @@ public class Door : MonoBehaviour
     //Entering Door Variables
     public float slowRoll = 10f;
     public float yPop = 10f;
+    public float rotForce = 20f;
 
 
     void Start()
@@ -44,16 +45,23 @@ public class Door : MonoBehaviour
     IEnumerator StopBall(GameObject player)
     {
         Rigidbody rb = player.GetComponent<Rigidbody>();
+        Vector3 towardsHole = (transform.position - player.transform.position);
+        Vector3 direction = towardsHole / 1.5f;
+
         while (rb.velocity.magnitude > .1f)
         {
             rb.velocity -= (rb.velocity * Time.deltaTime * slowRoll);
             yield return null;
         }
         rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+
         //impulse force towards hole
-        Vector3 direction = (transform.position - player.transform.position)/1.5f;
         direction += Vector3.up * yPop;
         rb.AddForce(direction, ForceMode.VelocityChange);
+
+        //rotate ball towards hole
+        rb.AddTorque(-Vector3.Cross(direction, Vector3.up) * rotForce, ForceMode.VelocityChange);
 
         //disable collider into hole
         player.GetComponent<Collider>().enabled = false;
