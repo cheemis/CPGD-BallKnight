@@ -13,6 +13,11 @@ public class Door : MonoBehaviour
 
     public float belowGround = -3f;
 
+    //Entering Door Variables
+    public float slowRoll = 10f;
+    public float yPop = 10f;
+
+
     void Start()
     {
         anim = GetComponent<Animator>();
@@ -31,16 +36,34 @@ public class Door : MonoBehaviour
             GameObject player = other.gameObject;
 
             entering = true;
-            other.enabled = false;
-            StartCoroutine(LoadNextLevel(player));
+            StartCoroutine(StopBall(player));
         }
     }
 
-    IEnumerator LoadNextLevel(GameObject player)
-    {
-        Rigidbody playerRB = player.GetComponent<Rigidbody>();
 
-        while (player.transform.position.y > belowGround)
+    IEnumerator StopBall(GameObject player)
+    {
+        Rigidbody rb = player.GetComponent<Rigidbody>();
+        while (rb.velocity.magnitude > .1f)
+        {
+            rb.velocity -= (rb.velocity * Time.deltaTime * slowRoll);
+            yield return null;
+        }
+        rb.velocity = Vector3.zero;
+        //impulse force towards hole
+        Vector3 direction = (transform.position - player.transform.position)/1.5f;
+        direction += Vector3.up * yPop;
+        rb.AddForce(direction, ForceMode.VelocityChange);
+
+        //disable collider into hole
+        player.GetComponent<Collider>().enabled = false;
+        StartCoroutine(LoadNextLevel(rb));
+    }
+
+    IEnumerator LoadNextLevel(Rigidbody playerRB)
+    {
+        
+        while (playerRB.position.y > belowGround)
         {
             yield return null;
         }

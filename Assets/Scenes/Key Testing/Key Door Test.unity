@@ -188,15 +188,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2367017823494203582, guid: 9eacabda240462f49ad7e41ea32afec3, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 30.629082
+      value: 20.09217
       objectReference: {fileID: 0}
     - target: {fileID: 2367017823494203582, guid: 9eacabda240462f49ad7e41ea32afec3, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 29.192974
+      value: 22.268192
       objectReference: {fileID: 0}
     - target: {fileID: 2367017823494203582, guid: 9eacabda240462f49ad7e41ea32afec3, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -43.428665
+      value: -34.36796
       objectReference: {fileID: 0}
     - target: {fileID: 2367017823494203582, guid: 9eacabda240462f49ad7e41ea32afec3, type: 3}
       propertyPath: m_LocalRotation.w
@@ -220,15 +220,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2367017823987098978, guid: 9eacabda240462f49ad7e41ea32afec3, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 30.629082
+      value: 20.09217
       objectReference: {fileID: 0}
     - target: {fileID: 2367017823987098978, guid: 9eacabda240462f49ad7e41ea32afec3, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 29.192974
+      value: 22.268192
       objectReference: {fileID: 0}
     - target: {fileID: 2367017823987098978, guid: 9eacabda240462f49ad7e41ea32afec3, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -43.428665
+      value: -34.36796
       objectReference: {fileID: 0}
     - target: {fileID: 2367017823987098978, guid: 9eacabda240462f49ad7e41ea32afec3, type: 3}
       propertyPath: m_LocalRotation.w
@@ -298,7 +298,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 2, z: 1}
+  m_Size: {x: 5, y: 2, z: 5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!95 &113661026
 Animator:
@@ -333,6 +333,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timeToLoadNext: 1
   belowGround: -1
+  slowRoll: 10
+  yPop: 7
 --- !u!1 &565733916
 GameObject:
   m_ObjectHideFlags: 0
@@ -700,15 +702,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4470966686231234986, guid: 03350b073d32895408a38b46687d9222, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 7.996911
+      value: -2.54
       objectReference: {fileID: 0}
     - target: {fileID: 4470966686231234986, guid: 03350b073d32895408a38b46687d9222, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 7.71478
+      value: 0.79
       objectReference: {fileID: 0}
     - target: {fileID: 4470966686231234986, guid: 03350b073d32895408a38b46687d9222, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -5.210703
+      value: 3.85
       objectReference: {fileID: 0}
     - target: {fileID: 4470966686231234986, guid: 03350b073d32895408a38b46687d9222, type: 3}
       propertyPath: m_LocalRotation.w
