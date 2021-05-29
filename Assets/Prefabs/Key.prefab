@@ -59,6 +59,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 153663ada2c94a045bccaef355908cae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  keyPickUpClip: {fileID: 8300000, guid: 23a43146cc93c9345a67012a73b5dffc, type: 3}
 --- !u!1001 &5310369231209098563
 PrefabInstance:
   m_ObjectHideFlags: 0
