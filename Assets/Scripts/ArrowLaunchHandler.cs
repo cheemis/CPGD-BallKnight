@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,7 +8,11 @@ public class ArrowLaunchHandler : MonoBehaviour {
     public LineRenderer arrowLineRenderer;
     public float launchArrowGrowRate = 0.2f;
     public LayerMask aimPlaneLayerMask;
+    [ColorUsage(true, true)]
+    public Color[] playerBallColors;
 
+    private Material mainBallMaterial;
+    private SphereCollider sphereColl;
     private Rigidbody rb;
 
     private ChargeMetersHandler chargeMetersHandler;
@@ -19,8 +24,20 @@ public class ArrowLaunchHandler : MonoBehaviour {
     private bool launchArrowActive = false;
     private float currentLaunchArrowRatio = 0.0f;
 
+    private Tween attackColorBlendTween = null;
+    private bool attackIsActive = false;
+
     private const int arrowRendererPointCount = 100;
     void Start() {
+        Renderer mainBallRenderer = GetComponent<Renderer>();
+        mainBallMaterial = new Material(mainBallRenderer.material);
+        mainBallMaterial.EnableKeyword("_EMISSION");
+        mainBallMaterial.SetColor("_EmissionColor", playerBallColors[0]);
+
+        mainBallRenderer.material = mainBallMaterial;
+
+        sphereColl = GetComponent<SphereCollider>();
+
         chargeMetersHandler = FindObjectOfType<ChargeMetersHandler>();
 
         rb = GetComponent<Rigidbody>();
@@ -46,14 +63,7 @@ public class ArrowLaunchHandler : MonoBehaviour {
                     SetArrowRendererPositions();
                 }
                 if (Input.GetMouseButtonUp(0)) {
-                    arrowLineRenderer.enabled = false;
-                    Vector3 forceVector = mouseAimDir * maxDashLaunchForce
-                        * currentLaunchArrowRatio * chargeMetersHandler.GetAdjustedMagicMeterValue();
-                    rb.AddForce(forceVector, ForceMode.Impulse);
-
-                    chargeMetersHandler.DrainMagicMeter();
-
-                    currentLaunchArrowRatio = 0.0f;
+                    LaunchFromLaunchArrow();
                 }
 
                 if (Input.GetMouseButtonDown(1)) {
@@ -70,6 +80,25 @@ public class ArrowLaunchHandler : MonoBehaviour {
         }
     }
 
+	private void FixedUpdate() {
+		/*if (rb.velocity.magnitude < 1.5f) {
+            ExitAttackMode();
+		}*/
+	}
+
+	private void LaunchFromLaunchArrow() {
+        arrowLineRenderer.enabled = false;
+        Vector3 forceVector = mouseAimDir * maxDashLaunchForce
+            * currentLaunchArrowRatio * chargeMetersHandler.GetAdjustedMagicMeterValue();
+        rb.AddForce(forceVector, ForceMode.Impulse);
+
+        chargeMetersHandler.DrainMagicMeter();
+
+        currentLaunchArrowRatio = 0.0f;
+
+        EnterAttackMode();
+    }
+
     private void SetArrowRendererPositions() {
         if (mouseAimDir.magnitude <= 0.0f) {
             arrowLineRenderer.enabled = false;
@@ -77,8 +106,8 @@ public class ArrowLaunchHandler : MonoBehaviour {
         }
         arrowLineRenderer.enabled = true;
 
-        Vector3 arrowStartPos = transform.position;
-        Vector3 arrowEndPos = Vector3.Lerp(transform.position, transform.position + (mouseAimDir * 5.0f), currentLaunchArrowRatio);
+        Vector3 arrowStartPos = transform.position + mouseAimDir * sphereColl.bounds.extents.x;
+        Vector3 arrowEndPos = Vector3.Lerp(arrowStartPos, arrowStartPos + (mouseAimDir * 5.0f), currentLaunchArrowRatio);
 
         Vector3[] rendererPositions = new Vector3[arrowRendererPointCount];
 
@@ -108,5 +137,43 @@ public class ArrowLaunchHandler : MonoBehaviour {
         else {
             Debug.DrawRay(mouseRay.origin, mouseRay.direction * 1000.0f, Color.red);
         }
+    }
+
+    private void ExitAttackMode() {
+        if (attackColorBlendTween != null && attackColorBlendTween.IsActive()) {
+            attackColorBlendTween.Kill();
+        }
+
+        mainBallMaterial.SetColor("_EmissionColor", playerBallColors[0]);
+
+        attackIsActive = false;
+    }
+
+    private void EnterAttackMode() {
+        attackIsActive = true;
+
+        mainBallMaterial.SetColor("_EmissionColor", playerBallColors[1]);
+
+		attackColorBlendTween = DOTween.To(
+			() => mainBallMaterial.GetColor("_EmissionColor"),
+			x => mainBallMaterial.SetColor("_EmissionColor", x),
+			playerBallColors[0],
+			1.0f
+		).SetEase(Ease.InOutSine)
+		.OnComplete(ExitAttackMode);
+	}
+
+    private void HandleAttackCollisionBehavior(Collision collision) {
+        if (attackIsActive) {
+            ExitAttackMode();
+		}
+    }
+
+	private void OnCollisionEnter(Collision collision) {
+        //HandleAttackCollisionBehavior(collision);
+    }
+
+    private void OnCollisionStay(Collision collision) {
+        //HandleAttackCollisionBehavior(collision);
     }
 }
