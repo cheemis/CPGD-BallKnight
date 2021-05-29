@@ -31,6 +31,8 @@ public class MainPlayerController : MonoBehaviour {
     private bool sceneIsLoading = false;
     private const float yPosResetCutoff = -5.0f;
 
+    private bool isPlaying = true;
+
     private Vector3 lastFrameVel;
     void Start() {
         rb = GetComponent<Rigidbody>();
@@ -55,7 +57,7 @@ public class MainPlayerController : MonoBehaviour {
             }
 		}
 
-        if (isGrounded) {
+        if (isGrounded && isPlaying) {
             if (Input.GetButtonDown("Jump")) {
                 rb.AddForce(Vector3.up * initialJumpLaunchForce, ForceMode.Impulse);
                 waitingForFallToGroundCheck = true;
@@ -82,9 +84,12 @@ public class MainPlayerController : MonoBehaviour {
 	}
 
 	void FixedUpdate() {
-        Vector3 targetDirection = GetTargetDirection();
+        if(isPlaying)
+        {
+            Vector3 targetDirection = GetTargetDirection();
 
-        rb.AddForce(targetDirection * basicMoveForce);
+            rb.AddForce(targetDirection * basicMoveForce);
+        }
 
         if (isJumping && !isGrounded) {
             if (jumpActiveTimer < maxAdditionalHoldJumpTime) {
@@ -159,5 +164,15 @@ public class MainPlayerController : MonoBehaviour {
     public void LateUpdate()
     {
         lastFrameVel = rb.velocity;
+    }
+
+    public void DisableInput()
+    {
+        isPlaying = false;
+    }
+
+    public void EnableInput()
+    {
+        isPlaying = true;
     }
 }
