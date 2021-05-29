@@ -79,8 +79,7 @@ public class Door : MonoBehaviour
         playerRB.isKinematic = true;
         playerRB.velocity = Vector3.zero;
         playerRB.angularVelocity = Vector3.zero;
-
-        yield return new WaitForSeconds(timeToLoadNext);
+                yield return new WaitForSeconds(timeToLoadNext);
         //SceneManager.LoadSceneAsync();
     }
 }
