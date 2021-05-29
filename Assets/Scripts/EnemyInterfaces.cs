@@ -1,9 +1,11 @@
 using UnityEngine;
 public interface Enemy
 {
-    void attack(Vector3 player_position);
-    void follow(Vector3 player_position);
-    void wander(Vector3 current_dest);
-    void switchPatrolMode(short old_mode, short new_mode);
+    void Attack(Vector3 player_position);
+    void Follow(Vector3 player_position);
+    void Wander(Vector3 current_dest);
+    void SwitchPatrolMode(short old_mode, short new_mode);
+
+    float OnCollision(Vector3 other_position, Vector3 other_velocity);
 
 }
