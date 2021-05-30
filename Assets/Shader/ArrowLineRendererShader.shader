@@ -55,6 +55,11 @@ Shader "Unlit/ArrowLineRendererShader"
         {
             Tags{"RenderType" = "Opaque" "IgnoreProjector" = "True" "PreviewType" = "Plane" "PerformanceChecks" = "False" "RenderPipeline" = "UniversalPipeline"}
 
+            Stencil{
+                Ref 1
+                Comp NotEqual
+            }
+
             // ------------------------------------------------------------------
             //  Forward pass.
             Pass

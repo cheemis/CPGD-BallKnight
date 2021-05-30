@@ -70,9 +70,9 @@ public class MainPlayerController : MonoBehaviour {
 		}
 
         if (isGrounded) {
-            if (rb.velocity.magnitude > minSpeedForRollVolume) {
+            if (!rollingAudioSource.FadeOutIsActive()) {
                 float volumeInterpValue = Mathf.Clamp(
-                    (rb.velocity.magnitude - minSpeedForRollVolume) / maxSpeedForRollVolume,
+                    rb.velocity.magnitude / maxSpeedForRollVolume,
                     0.0f, 1.0f);
                 rollingAudioSource.volume = Mathf.Lerp(0.0f, 0.3f, volumeInterpValue);
 
@@ -80,9 +80,9 @@ public class MainPlayerController : MonoBehaviour {
                     rollingAudioSource.Play();
                 }
             }
-		}
+        }
         else {
-            if (rollingAudioSource.isPlaying) {
+            if (rollingAudioSource.isPlaying && !rollingAudioSource.FadeOutIsActive()) {
                 rollingAudioSource.FadeOut();
             }
         }
