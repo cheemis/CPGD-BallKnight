@@ -24,7 +24,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1327945232818025271}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.0893173, y: 4.025113, z: -1.7961035}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4528636843293447734}
@@ -63,7 +63,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4528636843293447692}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.22068262, y: -3.0051131, z: 5.9961033}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1473866806260132733}
@@ -159,15 +159,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f199b7a63a9fd64d9d801800a0c84bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  min_speed: 2
-  min_force: 300
-  force_range: 200
-  patrol_radius: 4
-  sight_radius: 3.01
-  attack_radius: 2.43
-  patrol_points:
+  minMoveSpeed: 2
+  minAttackForce: 5
+  forceRange: 3.27
+  patrolRadius: 4.63
+  sightRadius: 3.61
+  attackRadius: 6.35
+  patrolPoints:
   - {fileID: 4506916670249749619}
-  path_color: {r: 0, g: 0.2139821, b: 1, a: 1}
+  pathColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!114 &4528636843293447735
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -180,21 +180,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e2ef93643ecce94dbd6151f8ffdfb1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  max_follow_speed: 5
-  min_follow_force: 30
-  follow_force_range: 20
-  max_repel_speed: 3
-  repel_force: 30
-  min_wander_speed: 4
-  min_wander_force: 300
-  wander_force_range: 200
-  attack_cooldown: 1.2
-  charge_speed: 20
-  attack_power: 3000
-  arrow_prefab: {fileID: 2865442770276793239, guid: 270c88fda04679a4597ea19bf8e6353d, type: 3}
-  pointer_offset: 3
+  maxFollowSpeed: 5
+  minFollowForce: 30
+  followForceRange: 20
+  maxRepelSpeed: 3
+  repelForce: 30
+  minWanderSpeed: 4
+  minWanderForce: 300
+  wanderForceRange: 200
+  attackCooldown: 1.2
+  chargeSpeed: 0.1
+  attackPower: 20
+  arrowPrefab: {fileID: 2865442770276793239, guid: 270c88fda04679a4597ea19bf8e6353d, type: 3}
+  pointerOffset: 0
   maxHealth: 20
-  ExplosionEffect: {fileID: 4099417750265097666, guid: af1e88084ca63f847b94bfbdb69c6a89, type: 3}
+  ExplosionEffect: {fileID: 6822913628830386828, guid: af1e88084ca63f847b94bfbdb69c6a89, type: 3}
   healthBarRenderer: {fileID: 4528636844041568226}
   dissolveMaterial: {fileID: 2100000, guid: 0bc7b95518f6e524a8aabb079a826243, type: 2}
   deathTimerLength: 1.5
@@ -226,7 +226,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4528636844041568231}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.32068276, y: -2.055113, z: 6.0261035}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 4, y: 0.5, z: 1}
   m_Children: []
   m_Father: {fileID: 1473866806260132733}
