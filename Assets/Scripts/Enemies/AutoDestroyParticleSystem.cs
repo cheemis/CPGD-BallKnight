@@ -12,6 +12,8 @@ public class AutoDestroyParticleSystem : MonoBehaviour
     }
     public void OnParticleSystemStopped()
     {
-        parent.OnParticelSystemDestoryed();
+        Debug.Log("Destoryed self");
+        Object.Destroy(gameObject);
+        parent.OnParticleSystemDestoryed();
     }
 }

@@ -10,8 +10,6 @@ public class HealthBar : MonoBehaviour
     [SerializeField]
     private Vector3 offset;
 
-    private Transform camera;
-
     private void Start() {
         camera = Camera.main.transform;
 

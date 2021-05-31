@@ -47,7 +47,7 @@ public class RollingEnemy : MonoBehaviour, Enemy
     public void Start()
     {
         rb = GetComponent<Rigidbody>();
-        random_range = GetComponent<PatrolAI>().patrol_radius / (float) 2;
+        random_range = GetComponent<PatrolAI>().patrolRadius / (float) 2;
         attack_timer = 0;
         pointer = Instantiate(arrow_prefab, transform.position, Quaternion.identity);
         arrow_scale = pointer.transform.localScale;
@@ -65,7 +65,7 @@ public class RollingEnemy : MonoBehaviour, Enemy
             if (deathTimer < 0)
             {
                 GameObject explosion = Instantiate(ExplosionEffect, transform.position, transform.rotation);
-                Object.Destroy(transform.parent);
+                Object.Destroy(transform.parent.gameObject);
             }
         }
     }
@@ -168,6 +168,7 @@ public class RollingEnemy : MonoBehaviour, Enemy
     public void takeDamage(int damage)
     {
         health -= damage;
+        health -= maxHealth;
         if (health < 1)
         {
             Renderer renderer = GetComponent<Renderer>();
