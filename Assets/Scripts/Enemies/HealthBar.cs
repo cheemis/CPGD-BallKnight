@@ -5,11 +5,10 @@ using UnityEngine;
 public class HealthBar : MonoBehaviour
 {
     public Transform objectToFollow;
+    private Transform camera;
 
     [SerializeField]
     private Vector3 offset;
-
-    private Transform camera;
 
     private void Start() {
         camera = Camera.main.transform;

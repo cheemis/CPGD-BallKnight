@@ -5,44 +5,46 @@ using UnityEngine.AI;
 
 public class PatrolAI : MonoBehaviour
 {
-    public float min_speed;
-    public float min_force;
-    public float force_range;
-    public float patrol_radius;
-    public float sight_radius;
-    public float attack_radius;
-    public List<Transform> patrol_points;
-    public Color path_color;
+    public float minSpeed;
+    public float minForce;
+    public float forceRange;
+    public float patrolRadius;
+    public float sightRadius;
+    public float attackRadius;
+    public List<Transform> patrolPoints;
+    public Color pathColor;
 
-    private Transform player_loc;
+    private Transform playerLoc;
     private Rigidbody rb;
-    private Enemy moving_enemy; // self but obv can't use self
-    private int current_dest_index;
-    private Vector3 current_dest;
-    private Color current_color;
+    private Enemy movingEnemy; // self but obv can't use self
+    private int currentDestIndex;
+    private Vector3 currentDest;
+    private Color currentColor;
     private short mode;
 
     public const short WANDER_MODE = 0;
     public const short ATTACK_MODE = 1;
     public const short FOLLOW_MODE = 2;
+    public const short DEAD_MODE = 3;
 
     void Start()
     {
-        player_loc = FindObjectOfType<MainPlayerController>().transform;
+        playerLoc = FindObjectOfType<MainPlayerController>().transform;
 
         rb = GetComponent<Rigidbody>();
-        moving_enemy = GetComponent<Enemy>();
-        current_dest = patrol_points[0].position;
-        current_dest_index = 0;
-        current_color = path_color;
+        movingEnemy = GetComponent<Enemy>();
+        currentDest = patrolPoints[0].position;
+        currentDestIndex = 0;
+        currentColor = pathColor;
         mode = WANDER_MODE;
+        playerLoc = FindObjectOfType<MainPlayerController>().transform;
     }
 
     void OnDrawGizmos()
     {
-        Gizmos.color = current_color;
-        Gizmos.DrawWireSphere(transform.position, sight_radius);
-        Gizmos.DrawWireSphere(transform.position, attack_radius);
+        Gizmos.color = currentColor;
+        Gizmos.DrawWireSphere(transform.position, sightRadius);
+        Gizmos.DrawWireSphere(transform.position, attackRadius);
     }
 
     // failsafe timer!!!
@@ -51,51 +53,53 @@ public class PatrolAI : MonoBehaviour
         switch (mode)
         {
             case ATTACK_MODE:
-                moving_enemy.Attack(player_loc.position);
-                if ((transform.position - player_loc.position).magnitude > attack_radius)
+                movingEnemy.Attack(playerLoc.position);
+                if ((transform.position - playerLoc.position).magnitude > attackRadius)
                 {
-                    current_color = Color.black;
+                    currentColor = Color.black;
                     switchPatrolMode(FOLLOW_MODE);
                 }
                 break;
             case FOLLOW_MODE:
-                float dist_to_player = Vector3.Distance(transform.position, player_loc.position);
-                moving_enemy.Follow(player_loc.position);
-                if (dist_to_player < attack_radius)
+                float dist_to_player = Vector3.Distance(transform.position, playerLoc.position);
+                movingEnemy.Follow(playerLoc.position);
+                if (dist_to_player < attackRadius)
                 {
                     switchPatrolMode(ATTACK_MODE);
-                    current_color = Color.white;
+                    currentColor = Color.white;
                     break;
                 }
-                else if (dist_to_player > sight_radius)
+                else if (dist_to_player > sightRadius)
                 {
                     switchPatrolMode(WANDER_MODE);
-                    current_color = path_color;
+                    currentColor = pathColor;
                     break;
                 }
                 break;
+            case DEAD_MODE:
+                break;
             default:
-                if (Vector3.Distance(transform.position, player_loc.position) < sight_radius)
+                if (Vector3.Distance(transform.position, playerLoc.position) < sightRadius)
                 {
                     switchPatrolMode(FOLLOW_MODE);
-                    current_color = Color.black;
+                    currentColor = Color.black;
                 }
-                else if ((current_dest - transform.position).magnitude < patrol_radius)
+                else if ((currentDest - transform.position).magnitude < patrolRadius)
                 {
-                    current_dest_index = (current_dest_index + 1) % patrol_points.Count;
-                    current_dest = patrol_points[current_dest_index].position;
+                    currentDestIndex = (currentDestIndex + 1) % patrolPoints.Count;
+                    currentDest = patrolPoints[currentDestIndex].position;
                 }
-                else if (Mathf.Abs(rb.velocity.magnitude) < min_speed)
+                else if (Mathf.Abs(rb.velocity.magnitude) < minSpeed)
                 {
-                    moving_enemy.Wander(current_dest);
+                    movingEnemy.Wander(currentDest);
                 }
                 break;
         }
     }
 
-    void switchPatrolMode(short new_mode)
+    public void switchPatrolMode(short new_mode)
     {
-        moving_enemy.SwitchPatrolMode(mode, new_mode);
+        movingEnemy.SwitchPatrolMode(mode, new_mode);
         mode = new_mode;
     }
 }

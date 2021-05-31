@@ -4,15 +4,14 @@ using UnityEngine;
 
 public class DeathAnimationTimer : MonoBehaviour
 {
+    private int childCount = 2;
     // Start is called before the first frame update
-    void Start()
+    public void OnParticleSystemDestoryed()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        childCount--;
+        if (childCount < 1)
+        {
+            Object.Destroy(gameObject);
+        }
     }
 }

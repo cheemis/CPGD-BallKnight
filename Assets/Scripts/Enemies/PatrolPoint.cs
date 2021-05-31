@@ -8,7 +8,7 @@ public class PatrolPoint : MonoBehaviour
     // Update is called once per frame
     void OnDrawGizmos()
     {
-        Gizmos.color = ai.path_color;
-        Gizmos.DrawWireSphere(transform.position, ai.patrol_radius);
+        Gizmos.color = ai.pathColor;
+        Gizmos.DrawWireSphere(transform.position, ai.patrolRadius);
     }
 }
