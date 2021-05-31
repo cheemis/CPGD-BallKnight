@@ -26,6 +26,7 @@ public class PatrolAI : MonoBehaviour
     public const short WANDER_MODE = 0;
     public const short ATTACK_MODE = 1;
     public const short FOLLOW_MODE = 2;
+    public const short DEAD_MODE = 3;
 
     void Start()
     {
@@ -35,6 +36,7 @@ public class PatrolAI : MonoBehaviour
         current_dest_index = 0;
         current_color = path_color;
         mode = WANDER_MODE;
+        player_loc = FindObjectOfType<MainPlayerController>().transform;
     }
 
     void OnDrawGizmos()
@@ -73,6 +75,8 @@ public class PatrolAI : MonoBehaviour
                     break;
                 }
                 break;
+            case DEAD_MODE:
+                break;
             default:
                 if (Vector3.Distance(transform.position, player_loc.position) < sight_radius)
                 {
@@ -92,7 +96,7 @@ public class PatrolAI : MonoBehaviour
         }
     }
 
-    void switchPatrolMode(short new_mode)
+    public void switchPatrolMode(short new_mode)
     {
         moving_enemy.SwitchPatrolMode(mode, new_mode);
         mode = new_mode;

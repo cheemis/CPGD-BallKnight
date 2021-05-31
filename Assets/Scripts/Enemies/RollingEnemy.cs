@@ -28,8 +28,9 @@ public class RollingEnemy : MonoBehaviour, Enemy
     private Vector3 arrow_scale;
     [SerializeField]
     private int maxHealth = 20;
+    [SerializeField]
     private int health;
-    private float HIT_THRESHOLD = 10f;
+    private float HIT_THRESHOLD = 2f;
     private Vector3 lastFrameVel;
     [SerializeField]
     private GameObject ExplosionEffect;
@@ -40,6 +41,8 @@ public class RollingEnemy : MonoBehaviour, Enemy
     [SerializeField]
     private float deathTimerLength;
     private float deathTimer;
+
+    public const float DAMAGE_FACTOR = .333f;
 
     public void Start()
     {
@@ -62,8 +65,7 @@ public class RollingEnemy : MonoBehaviour, Enemy
             if (deathTimer < 0)
             {
                 GameObject explosion = Instantiate(ExplosionEffect, transform.position, transform.rotation);
-                //GameObject.Destroy(explosion, explosion.GetComponent<ParticleSystem>().main.duration);
-                Object.Destroy(this);
+                Object.Destroy(transform.parent);
             }
         }
     }
@@ -153,7 +155,7 @@ public class RollingEnemy : MonoBehaviour, Enemy
         Debug.Log($"{projected_other_vel.magnitude} {projected_enemy_vel.magnitude} vel_difference: {vel_difference}");
         if (vel_difference < -HIT_THRESHOLD)
         {
-            takeDamage(-(int) Mathf.Floor(vel_difference));
+            takeDamage(-(int) Mathf.Floor(vel_difference * DAMAGE_FACTOR));
             return vel_difference;
         }
         else if (vel_difference > HIT_THRESHOLD)
@@ -182,13 +184,17 @@ public class RollingEnemy : MonoBehaviour, Enemy
                 Object.Destroy(healthBarRenderer);
                 healthBarRenderer = null;
             }
+            GetComponent<PatrolAI>().switchPatrolMode(PatrolAI.DEAD_MODE);
         }
     }
 
     public void LateUpdate()
     {
         lastFrameVel = rb.velocity;
-        healthBarRenderer.material.SetFloat("PercentHealth", 0/(float)maxHealth);
-        healthBarRenderer.material.SetFloat("PercentHealth", Mathf.Abs(Mathf.Sin(Time.time + transform.position.x)));
+        if (healthBarRenderer)
+        {
+            healthBarRenderer.material.SetFloat("PercentHealth", health / (float)maxHealth);
+            //healthBarRenderer.material.SetFloat("PercentHealth", Mathf.Abs(Mathf.Sin(Time.time + transform.position.x)));
+        }
     }
 }
