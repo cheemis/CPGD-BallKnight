@@ -4,31 +4,30 @@ using UnityEngine;
 
 public class RollingEnemy : MonoBehaviour, Enemy
 {
-    public float max_follow_speed = 5;
-    public float min_follow_force = 30;
-    public float follow_force_range = 20;
-    public float max_repel_speed = 3;
-    public float repel_force = 30;
-    public float min_wander_speed = 4;
-    public float min_wander_force = 300;
-    public float wander_force_range = 200;
-    public float attack_cooldown = 1.2f;
-    public float charge_speed = 5.0f;
-    public float attack_power = 50f;
-    public GameObject arrow_prefab;
-    public float pointer_offset;
+    public float maxFollowSpeed = 5;
+    public float minFollowForce = 30;
+    public float followForceRange = 20;
+    public float maxRepelSpeed = 3;
+    public float repelForce = 30;
+    public float minWanderSpeed = 4;
+    public float minWanderForce = 300;
+    public float wanderForceRange = 200;
+    public float attackCooldown = 1.2f;
+    public float chargeSpeed = 5.0f;
+    public float attackPower = 50f;
+    public GameObject arrowPrefab;
+    public float pointerOffset;
 
     private Rigidbody rb;
-    private float random_range;
-    private float attack_timer;
+    private float randomRange;
+    private float attackTimer;
     private bool charging = false;
-    private float launch_power = 0;
+    private float launchPower = 0;
     private bool launched = false;
     private GameObject pointer;
-    private Vector3 arrow_scale;
+    private Vector3 arrowScale;
     [SerializeField]
     private int maxHealth = 20;
-    [SerializeField]
     private int health;
     private float HIT_THRESHOLD = 2f;
     private Vector3 lastFrameVel;
@@ -47,13 +46,13 @@ public class RollingEnemy : MonoBehaviour, Enemy
     public void Start()
     {
         rb = GetComponent<Rigidbody>();
-        random_range = GetComponent<PatrolAI>().patrolRadius / (float) 2;
-        attack_timer = 0;
-        pointer = Instantiate(arrow_prefab, transform.position, Quaternion.identity);
-        arrow_scale = pointer.transform.localScale;
+        randomRange = GetComponent<PatrolAI>().patrolRadius / (float) 2;
+        attackTimer = 0;
+        pointer = Instantiate(arrowPrefab, transform.position, Quaternion.identity);
+        arrowScale = pointer.transform.localScale;
         lastFrameVel = rb.velocity;
         health = maxHealth;
-        GameObject.Destroy(pointer);
+        Destroy(pointer);
     }
 
     public void Update()
@@ -65,52 +64,52 @@ public class RollingEnemy : MonoBehaviour, Enemy
             if (deathTimer < 0)
             {
                 GameObject explosion = Instantiate(ExplosionEffect, transform.position, transform.rotation);
-                Object.Destroy(transform.parent.gameObject);
+                Destroy(transform.parent.gameObject);
             }
         }
     }
 
-    public void Attack(Vector3 player_position)
+    public void Attack(Vector3 playerPosition)
     {
         if (charging)
         {
-            launch_power += charge_speed;
-            Vector3 enemy_to_player = player_position - transform.position;
-            Vector3 xz_direction = new Vector3(enemy_to_player.x, 0, enemy_to_player.z);
-            Quaternion rotation = Quaternion.FromToRotation(new Vector3(1, 0, 0), xz_direction);
-            float power_scale = launch_power / attack_power;
-            pointer.transform.localScale = new Vector3( power_scale * arrow_scale.x,
-                power_scale * arrow_scale.y, power_scale * arrow_scale.z);
+            launchPower += chargeSpeed;
+            Vector3 enemyToPlayer = playerPosition - transform.position;
+            Vector3 directionXZ = new Vector3(enemyToPlayer.x, 0, enemyToPlayer.z);
+            Quaternion rotation = Quaternion.FromToRotation(new Vector3(1, 0, 0), directionXZ);
+            float powerScale = launchPower / attackPower;
+            pointer.transform.localScale = new Vector3( powerScale * arrowScale.x,
+                powerScale * arrowScale.y, powerScale * arrowScale.z);
             pointer.transform.eulerAngles = rotation.eulerAngles;
-            pointer.transform.position = transform.position + rotation * new Vector3(power_scale * pointer_offset, 0, 0);
-            pointer.GetComponent<Renderer>().material.SetFloat("Power_proportion", power_scale);
-            if (launch_power >= attack_power)
+            pointer.transform.position = transform.position + rotation * new Vector3(powerScale * pointerOffset, 0, 0);
+            pointer.GetComponent<Renderer>().material.SetFloat("Power_proportion", powerScale);
+            if (launchPower >= attackPower)
             {
-                rb.AddForce(Vector3.Normalize(player_position - rb.position) * attack_power, ForceMode.Impulse);
+                rb.AddForce(Vector3.Normalize(playerPosition - rb.position) * attackPower, ForceMode.Impulse);
                 charging = false;
-                attack_timer = attack_cooldown;
+                attackTimer = attackCooldown;
                 launched = true;
-                GameObject.Destroy(pointer);
+                Destroy(pointer);
                 pointer = null;
             }
         }
-        else if (attack_timer < 0)
+        else if (attackTimer < 0)
         {
             charging = true;
-            launch_power = 0;
-            Vector3 enemy_to_player = player_position - transform.position;
-            Vector3 xz_direction = new Vector3(enemy_to_player.x, 0, enemy_to_player.z);
-            Quaternion rotation = Quaternion.FromToRotation(new Vector3(1, 0, 0), xz_direction);
-            pointer = Instantiate(arrow_prefab,
-                transform.position + rotation * (Vector3.right * 0.01f * pointer_offset), rotation);
-            pointer.transform.localScale = new Vector3(0.3f * arrow_scale.x, arrow_scale.y, 0.3f * arrow_scale.z);
+            launchPower = 0;
+            Vector3 enemyToPlayer = playerPosition - transform.position;
+            Vector3 directionXZ = new Vector3(enemyToPlayer.x, 0, enemyToPlayer.z);
+            Quaternion rotation = Quaternion.FromToRotation(new Vector3(1, 0, 0), directionXZ);
+            pointer = Instantiate(arrowPrefab,
+                transform.position + rotation * (Vector3.right * 0.01f * pointerOffset), rotation);
+            pointer.transform.localScale = new Vector3(0.3f * arrowScale.x, arrowScale.y, 0.3f * arrowScale.z);
         }
-        else if (!launched && Mathf.Abs(rb.velocity.magnitude) < max_repel_speed)
+        else if (!launched && Mathf.Abs(rb.velocity.magnitude) < maxRepelSpeed)
         {
-            rb.AddForce(Vector3.Normalize(player_position - rb.position) * -repel_force);
-            attack_timer = Mathf.Max(attack_timer - Time.deltaTime, -1.0f);
+            rb.AddForce(Vector3.Normalize(playerPosition - rb.position) * -repelForce);
+            attackTimer = Mathf.Max(attackTimer - Time.deltaTime, -1.0f);
         }
-        else if (Mathf.Abs(rb.velocity.magnitude) < max_repel_speed)
+        else if (Mathf.Abs(rb.velocity.magnitude) < maxRepelSpeed)
         {
             launched = false;
         }
@@ -119,48 +118,47 @@ public class RollingEnemy : MonoBehaviour, Enemy
 
     public void Follow(Vector3 player_position)
     {
-        if (Mathf.Abs(rb.velocity.magnitude) < max_follow_speed)
+        if (Mathf.Abs(rb.velocity.magnitude) < maxFollowSpeed)
         {
-            rb.AddForce(Vector3.Normalize(player_position - rb.position) * (min_follow_force + Random.value * follow_force_range));
+            rb.AddForce(Vector3.Normalize(player_position - rb.position) * (minFollowForce + Random.value * followForceRange));
         }
-        attack_timer = Mathf.Max(attack_timer - Time.deltaTime, -1.0f);
+        attackTimer = Mathf.Max(attackTimer - Time.deltaTime, -1.0f);
     }
 
     public void Wander(Vector3 current_dest)
     {
-        if (Mathf.Abs(rb.velocity.magnitude) < min_wander_speed)
+        if (Mathf.Abs(rb.velocity.magnitude) < minWanderSpeed)
         {
             // launch to point within patrol sphere
-            Vector3 destinationPoint = current_dest + (Random.insideUnitSphere * random_range);
-            rb.AddForce(Vector3.Normalize(destinationPoint - rb.position) * (min_wander_force + Random.value * wander_force_range));
+            Vector3 destinationPoint = current_dest + (Random.insideUnitSphere * randomRange);
+            rb.AddForce(Vector3.Normalize(destinationPoint - rb.position) * (minWanderForce + Random.value * wanderForceRange));
         }
-        attack_timer = Mathf.Max(attack_timer - Time.deltaTime, -1.0f);
+        attackTimer = Mathf.Max(attackTimer - Time.deltaTime, -1.0f);
     }
 
     public void SwitchPatrolMode(short old_mode, short new_mode)
     {
         if (old_mode == PatrolAI.ATTACK_MODE && charging)
         {
-            GameObject.Destroy(pointer);
+            Destroy(pointer);
             charging = false;
         }
     }
 
     public float OnCollision(Vector3 other_position, Vector3 other_velocity)
     {
-        Vector3 center_to_center = transform.position - other_position;
-        Vector3 projected_enemy_vel =  Vector3.Project(lastFrameVel, center_to_center),
-            projected_other_vel = Vector3.Project(other_velocity, center_to_center);
-        float vel_difference = projected_enemy_vel.magnitude - projected_other_vel.magnitude;
-        Debug.Log($"{projected_other_vel.magnitude} {projected_enemy_vel.magnitude} vel_difference: {vel_difference}");
-        if (vel_difference < -HIT_THRESHOLD)
+        Vector3 centerToCenter = transform.position - other_position;
+        Vector3 projectedEnemyVel =  Vector3.Project(lastFrameVel, centerToCenter),
+            projectedOtherVel = Vector3.Project(other_velocity, centerToCenter);
+        float velDifference = projectedEnemyVel.magnitude - projectedOtherVel.magnitude;
+        if (velDifference < -HIT_THRESHOLD)
         {
-            takeDamage(-(int) Mathf.Floor(vel_difference * DAMAGE_FACTOR));
-            return vel_difference;
+            takeDamage(-(int) Mathf.Floor(velDifference * DAMAGE_FACTOR));
+            return velDifference;
         }
-        else if (vel_difference > HIT_THRESHOLD)
+        else if (velDifference > HIT_THRESHOLD)
         {
-            return vel_difference;
+            return velDifference;
         }
         return -1.0f;
     }
@@ -177,12 +175,12 @@ public class RollingEnemy : MonoBehaviour, Enemy
             deathTimer = deathTimerLength;
             if (pointer)
             {
-                Object.Destroy(pointer);
+                Destroy(pointer);
                 pointer = null;
             }
             if (healthBarRenderer)
             {
-                Object.Destroy(healthBarRenderer);
+                Destroy(healthBarRenderer);
                 healthBarRenderer = null;
             }
             GetComponent<PatrolAI>().switchPatrolMode(PatrolAI.DEAD_MODE);
@@ -195,7 +193,6 @@ public class RollingEnemy : MonoBehaviour, Enemy
         if (healthBarRenderer)
         {
             healthBarRenderer.material.SetFloat("PercentHealth", health / (float)maxHealth);
-            //healthBarRenderer.material.SetFloat("PercentHealth", Mathf.Abs(Mathf.Sin(Time.time + transform.position.x)));
         }
     }
 }

@@ -5,8 +5,8 @@ using UnityEngine.AI;
 
 public class PatrolAI : MonoBehaviour
 {
-    public float minSpeed;
-    public float minForce;
+    public float minMoveSpeed;
+    public float minAttackForce;
     public float forceRange;
     public float patrolRadius;
     public float sightRadius;
@@ -29,8 +29,6 @@ public class PatrolAI : MonoBehaviour
 
     void Start()
     {
-        playerLoc = FindObjectOfType<MainPlayerController>().transform;
-
         rb = GetComponent<Rigidbody>();
         movingEnemy = GetComponent<Enemy>();
         currentDest = patrolPoints[0].position;
@@ -47,7 +45,6 @@ public class PatrolAI : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, attackRadius);
     }
 
-    // failsafe timer!!!
     void FixedUpdate()
     {
         switch (mode)
@@ -89,7 +86,7 @@ public class PatrolAI : MonoBehaviour
                     currentDestIndex = (currentDestIndex + 1) % patrolPoints.Count;
                     currentDest = patrolPoints[currentDestIndex].position;
                 }
-                else if (Mathf.Abs(rb.velocity.magnitude) < minSpeed)
+                else if (Mathf.Abs(rb.velocity.magnitude) < minMoveSpeed)
                 {
                     movingEnemy.Wander(currentDest);
                 }
