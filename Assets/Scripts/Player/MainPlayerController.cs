@@ -204,10 +204,8 @@ public class MainPlayerController : MonoBehaviour {
 
             delayBeforeCanPlayHitClipCo = StartCoroutine(DelayBeforeCanPlayHitClipCo());
         }
-
         Enemy enemy_component = collision.gameObject.GetComponent<Enemy>();
-        if (enemy_component != null)
-        {
+        if (enemy_component != null) {
             float vel_difference = enemy_component.OnCollision(transform.position, lastFrameVel);
         }
     }
