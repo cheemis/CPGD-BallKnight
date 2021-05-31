@@ -10,12 +10,15 @@ public class HealthBar : MonoBehaviour
     [SerializeField]
     private Vector3 offset;
 
-    private void Start()
-    {
+    private Transform camera;
+
+    private void Start() {
         camera = Camera.main.transform;
+
     }
-    // Update is called once per frame
-    void Update()
+
+	// Update is called once per frame
+	void Update()
     {
         transform.position = objectToFollow.position + offset;
         transform.eulerAngles = camera.eulerAngles;

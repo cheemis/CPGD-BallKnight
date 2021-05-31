@@ -25,6 +25,9 @@ public class MainPlayerController : MonoBehaviour {
 
     private ArrowLaunchHandler arrowLaunchHandler;
 
+    private Transform raycastAimPlaneTransform;
+    private Vector3 initialRaycastAimPlanePosOffset;
+
     private Camera mainCam;
     private Transform cameraTransform;
 
@@ -54,11 +57,24 @@ public class MainPlayerController : MonoBehaviour {
 
         initialPos = transform.position;
 
+        GameObject raycastAimPlaneObject = GameObject.FindGameObjectWithTag("RaycastAimPlane");
+        if (raycastAimPlaneObject != null) {
+            raycastAimPlaneTransform = raycastAimPlaneObject.transform;
+            initialRaycastAimPlanePosOffset = raycastAimPlaneTransform.position - transform.position;
+        }
+        else {
+            Debug.LogError("Unable to find RaycastAimPlane object in current scene. Aiming system won't work.");
+		}
+
         mainCam = Camera.main;
         cameraTransform = mainCam.transform;
     }
 
 	private void Update() {
+        if (raycastAimPlaneTransform != null) {
+            raycastAimPlaneTransform.position = transform.position + initialRaycastAimPlanePosOffset;
+        }
+
         if (!waitingForFallToGroundCheck) {
             CheckForGround();
         }
@@ -204,10 +220,8 @@ public class MainPlayerController : MonoBehaviour {
 
             delayBeforeCanPlayHitClipCo = StartCoroutine(DelayBeforeCanPlayHitClipCo());
         }
-
         Enemy enemy_component = collision.gameObject.GetComponent<Enemy>();
-        if (enemy_component != null)
-        {
+        if (enemy_component != null) {
             float vel_difference = enemy_component.OnCollision(transform.position, lastFrameVel);
         }
     }

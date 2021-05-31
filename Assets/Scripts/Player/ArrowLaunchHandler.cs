@@ -191,6 +191,10 @@ public class ArrowLaunchHandler : MonoBehaviour {
         DisableLaunchArrowComponents();
     }
 
+    public Vector2 GetMinMaxAttackSpeedCutoffValues() {
+        return minMaxAttackSpeedCutoffValues;
+	}
+
     private void ExitAttackMode() {
         if (attackColorBlendTween != null && attackColorBlendTween.IsActive()) {
             attackColorBlendTween.Kill();
