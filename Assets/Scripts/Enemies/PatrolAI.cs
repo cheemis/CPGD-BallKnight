@@ -12,10 +12,9 @@ public class PatrolAI : MonoBehaviour
     public float sight_radius;
     public float attack_radius;
     public List<Transform> patrol_points;
-    public Transform player_loc;
     public Color path_color;
-    
 
+    private Transform player_loc;
     private Rigidbody rb;
     private Enemy moving_enemy; // self but obv can't use self
     private int current_dest_index;
@@ -29,6 +28,8 @@ public class PatrolAI : MonoBehaviour
 
     void Start()
     {
+        player_loc = FindObjectOfType<MainPlayerController>().transform;
+
         rb = GetComponent<Rigidbody>();
         moving_enemy = GetComponent<Enemy>();
         current_dest = patrol_points[0].position;

@@ -167,10 +167,6 @@ MonoBehaviour:
   attack_radius: 2.43
   patrol_points:
   - {fileID: 4506916670249749619}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  player_loc: {fileID: 0}
   path_color: {r: 0, g: 0.2139821, b: 1, a: 1}
 --- !u!114 &4528636843293447735
 MonoBehaviour:
@@ -311,7 +307,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a71679a2ce003fb48826e830e101f8bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  camera: {fileID: 0}
   objectToFollow: {fileID: 4528636843293447734}
   offset: {x: 0, y: 1, z: 0}
 --- !u!1001 &5456186148537317921
