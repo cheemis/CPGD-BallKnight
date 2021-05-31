@@ -4,14 +4,20 @@ using UnityEngine;
 
 public class HealthBar : MonoBehaviour
 {
-    public Transform camera;
     public Transform objectToFollow;
 
     [SerializeField]
     private Vector3 offset;
 
-    // Update is called once per frame
-    void Update()
+    private Transform camera;
+
+    private void Start() {
+        camera = Camera.main.transform;
+
+    }
+
+	// Update is called once per frame
+	void Update()
     {
         transform.position = objectToFollow.position + offset;
         transform.eulerAngles = camera.eulerAngles;

@@ -32,7 +32,14 @@ public class RollingEnemy : MonoBehaviour, Enemy
     private float HIT_THRESHOLD = 10f;
     private Vector3 lastFrameVel;
     [SerializeField]
+    private GameObject ExplosionEffect;
+    [SerializeField]
     private MeshRenderer healthBarRenderer;
+    [SerializeField]
+    private Material dissolveMaterial;
+    [SerializeField]
+    private float deathTimerLength;
+    private float deathTimer;
 
     public void Start()
     {
@@ -45,6 +52,22 @@ public class RollingEnemy : MonoBehaviour, Enemy
         health = maxHealth;
         GameObject.Destroy(pointer);
     }
+
+    public void Update()
+    {
+        if (health < 1)
+        {
+            deathTimer -= Time.deltaTime;
+            transform.localScale = new Vector3(1, 1, 1) * deathTimer / deathTimerLength;
+            if (deathTimer < 0)
+            {
+                GameObject explosion = Instantiate(ExplosionEffect, transform.position, transform.rotation);
+                //GameObject.Destroy(explosion, explosion.GetComponent<ParticleSystem>().main.duration);
+                Object.Destroy(this);
+            }
+        }
+    }
+
     public void Attack(Vector3 player_position)
     {
         if (charging)
@@ -66,6 +89,7 @@ public class RollingEnemy : MonoBehaviour, Enemy
                 attack_timer = attack_cooldown;
                 launched = true;
                 GameObject.Destroy(pointer);
+                pointer = null;
             }
         }
         else if (attack_timer < 0)
@@ -127,9 +151,9 @@ public class RollingEnemy : MonoBehaviour, Enemy
             projected_other_vel = Vector3.Project(other_velocity, center_to_center);
         float vel_difference = projected_enemy_vel.magnitude - projected_other_vel.magnitude;
         Debug.Log($"{projected_other_vel.magnitude} {projected_enemy_vel.magnitude} vel_difference: {vel_difference}");
-        if (vel_difference < HIT_THRESHOLD)
+        if (vel_difference < -HIT_THRESHOLD)
         {
-            health -= 1;
+            takeDamage(-(int) Mathf.Floor(vel_difference));
             return vel_difference;
         }
         else if (vel_difference > HIT_THRESHOLD)
@@ -139,10 +163,32 @@ public class RollingEnemy : MonoBehaviour, Enemy
         return -1.0f;
     }
 
+    public void takeDamage(int damage)
+    {
+        health -= damage;
+        if (health < 1)
+        {
+            Renderer renderer = GetComponent<Renderer>();
+            renderer.material = dissolveMaterial;
+            renderer.material.SetFloat("StartTime", Time.time);
+            deathTimer = deathTimerLength;
+            if (pointer)
+            {
+                Object.Destroy(pointer);
+                pointer = null;
+            }
+            if (healthBarRenderer)
+            {
+                Object.Destroy(healthBarRenderer);
+                healthBarRenderer = null;
+            }
+        }
+    }
+
     public void LateUpdate()
     {
         lastFrameVel = rb.velocity;
         healthBarRenderer.material.SetFloat("PercentHealth", 0/(float)maxHealth);
-        healthBarRenderer.material.SetFloat("PercentHealth", Mathf.Abs(Mathf.Sin(Time.time)));
+        healthBarRenderer.material.SetFloat("PercentHealth", Mathf.Abs(Mathf.Sin(Time.time + transform.position.x)));
     }
 }

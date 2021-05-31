@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Door
+  - RaycastAimPlane
   layers:
   - Default
   - TransparentFX
